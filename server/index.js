@@ -2,6 +2,7 @@ import express from 'express'
 import logger from 'morgan'
 import os from 'node:os';
 
+import qrcode from 'qrcode';
 import { Server } from 'socket.io'
 import { createServer } from 'node:http'
 
@@ -66,12 +67,26 @@ socket.on('chat message', (msg) => {
 
 app.use(logger('dev'))
 
+// Servir archivos estáticos desde la carpeta 'cliente'
+app.use(express.static('cliente'));
+
 
 
 app.get('/', (req, res) => {
   res.sendFile(process.cwd()+'/cliente/index.html')
 
 })
+
+//Generara QR apartir de la ip
+app.get('/qrcode', async (req, res) => {
+    const urlToEncode = `http://${ipAddress}:${port}`;
+    try {
+        const qrCodeDataUrl = await qrcode.toDataURL(urlToEncode);
+        res.json({ qrCode: qrCodeDataUrl, url: urlToEncode });
+    } catch (err) {
+        console.error('Error generando el código QR:', err);
+        res.status(500).send('Error interno del servidor al generar QR.'); }
+});
 
 server.listen(port, () => {
   console.log(`Servidor corriendo por el puerto: localhost : ${port}`)

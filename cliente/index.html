@@ -5,191 +5,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChatJS</title>
+    <link rel="stylesheet" href="styles.css">
     <script type="module">
-        import { io } from 'https://cdn.socket.io/4.3.2/socket.io.esm.min.js';
-   const socket = io()
-
-   const form = document.getElementById('form')
-   const input = document.getElementById('input')
-    const messages = document.getElementById('messages')
-
-    
-   const ipDisplay = document.getElementById('ip-display');
-
-    socket.on('chat message', (msg) => {
-        const item = `<li> ${msg}</li>`
-        messages.insertAdjacentHTML(
-                        'beforeend', item)
-    })
-
-
-
-
-   form.addEventListener('submit', (e) => {
-    e.preventDefault()
-
-
-    if(input.value){
-    socket.emit('chat message', input.value)
-    input.value = ''
-   
-   }
-   })
-
-   socket.on('server_info', (data) => {
-        // data es el objeto { ip: '192.168.x.x', port: 3000 }
-        if (ipDisplay) {
-            ipDisplay.textContent = `${data.ip}:${data.port}`;
-        }
-    });
-
-
-   
+        // El código JavaScript se ha movido a /cliente/script.js
     </script>
-    <style>
-    *,
-    *::before,
-    *::after {
-        box-sizing: border-box;
-    }
-
-    /* 💡 Cambio Clave: Asegurar que HTML y BODY ocupen toda la altura de la ventana */
-    html, body {
-        height: 100%; /* Asegura que ambos tomen la altura total de la ventana */
-        margin: 0;
-    }
-
-    :root {
-        color-scheme: light dark;
-    }
-
-    body {
-        /* Se eliminó height: 100vh; que a veces causa problemas con la altura real. Se reemplazó por height: 100% en html, body. */
-        font-family: sans-serif , 'Open Sans', 'Helvetica Neue', 'Roboto';
-        display: grid;
-        /* Mantener el centrado del contenedor */
-        place-content: center;
-        place-items: center;
-        padding: 36px;
-        grid-template-rows: 1fr;
-        background-color: #a9e6d1;
-    }
-
-    #chat {
-        border: 1px solid #5650cb;
-        border-radius: 12px;
-        overflow: hidden;
-        width: 410px;
-        /* 💡 Cambio Clave: Usar una altura fija o limitada, o viewport height */
-        height: calc(100vh - 72px); /* Ocupa casi toda la altura visible, descontando el padding del body (2 * 36px) */
-        max-height: 800px; /* Un límite sensato para dispositivos grandes, opcional */
-        position: relative; /* ¡Esencial para el posicionamiento absoluto del #form! */
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1),
-                    0 0 0 3px rgba(0, 0, 0, 0.25);
-    }
-
-    #form {
-        /* Las propiedades de posición son correctas para fijarlo al final del contenedor */
-        bottom: 0;
-        display: flex;
-        height: 50px;
-        left: 0;
-        padding: 3px;
-        position: absolute;
-        right: 0;
-        /* Opcional: añadir un color de fondo al formulario para que se vea claro */
-        background-color: white;
-        border-top: 1px solid #eee; /* Separador sutil */
-    }
-
-    #form > button {
-        background: #5650cb;
-        border: 1px solid #443eb4;
-        border-radius: 4px; 
-        color: white; 
-        cursor: pointer;
-
-        margin: 4px;
-        padding: 0 15px;
-    }
-
-    #input {
-       
-        border-radius: 4px;
-        border: 3px solid #967ed7;
-        color: #485979;
-        font-size: 1.2rem;
-        flex: 1;
-        margin: 4px;
-        padding: 0 15px; 
-    }
-
-    #messages {
-        list-style: none;
-        margin: 0;
-        padding: 0;   
-    }
-
-    #messages > li {
-        padding: .5rem 1rem;
-        border-radius: #1ee;
-        border: 1px solid #eee;
-        background: #5650cb;
-        color: #000;
-        font-size: 2rem;
-    }
-
-    #messages > li:nth-child(odd) {
-       background: #c5c5c5;
-      
-
-       
     
-    }
-
-
-    /* ... dentro de tu bloque <style> ... */
-
-/* Estilo para la barra de dirección IP */
-#server-address {
-    padding: 8px 15px;
-    border-radius: 15px;
-    background-color: #000000; /* Color de fondo para distinguir */
-    color: #235fb8;
-    border-bottom: 1px solid #c3c3c3;
-    font-size: 0.9rem;
-    font-weight: bold;
-    text-align: center;
-}
-
-#ip-display {
-    color: #ffffff; /* Un color que haga la IP más visible */
-}
-
-/* Modificar #messages para que use el espacio restante */
-#messages {
-    list-style: none;
-    margin: 0;
-    padding: 0; 
-    
-    /* 💡 AJUSTE CLAVE: Calcular la altura restante */
-    /* 100% de #chat - Altura del formulario (50px) - Altura de la barra IP (aprox. 34px) */
-    height: calc(100% - 50px - 34px); 
-    overflow-y: auto; /* Permite desplazamiento si hay muchos mensajes */
-    padding-top: 5px; 
-    padding-bottom: 5px; 
-}
-
-/* ... el resto de tus estilos ... */
-</style>
-
 <body>
 
 
     <section id="info">
                 <div id="server-address">
                     Conectado a Servidor: <span id="ip-display">Buscando IP...</span>
-                 </div> 
+                 </div>
+                 
+        <section id="qr">
+            <button id="show-qr-btn" title="Mostrar QR para escanear">
+                🖼️ QR
+            </button>
+            <div id="qr-container" style="display:none; text-align:center; padding-top:10px;">
+                <img id="qr-image" alt="Código QR del servidor" width="150" height="150">
+                <p style="font-size:0.8rem; margin: 5px 0;">Escanéa para conectar</p>
+            </div>
+
+
+         </section>
                    
     </section>
     <section id="chat">
@@ -206,4 +45,6 @@
              </button>
         </form>
     </section>
+
+    <script type="module" src="./script.js"></script>
 </body>
