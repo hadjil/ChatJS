@@ -26,18 +26,6 @@ body {
     background-color: #a9e6d1;
 }
 
-#chat {
-    border: 1px solid #5650cb;
-    border-radius: 12px;
-    overflow: hidden;
-    width: 410px;
-    /* 💡 Cambio Clave: Usar una altura fija o limitada, o viewport height */
-    height: calc(100vh - 72px); /* Ocupa casi toda la altura visible, descontando el padding del body (2 * 36px) */
-    max-height: 800px; /* Un límite sensato para dispositivos grandes, opcional */
-    position: relative; /* ¡Esencial para el posicionamiento absoluto del #form! */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1),
-                0 0 0 3px rgba(0, 0, 0, 0.25);
-}
 
 #form {
     /* Las propiedades de posición son correctas para fijarlo al final del contenedor */
@@ -75,10 +63,76 @@ body {
     padding: 0 15px; 
 }
 
+/* ... tu CSS existente ... */
+
+#chat {
+    border: 1px solid #5650cb;
+    border-radius: 12px;
+    overflow: hidden;
+    width: 410px;
+    height: calc(100vh - 72px);
+    max-height: 800px;
+    position: relative; /* ¡Esencial para el posicionamiento absoluto del #form y #qr! */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1),
+                0 0 0 3px rgba(0, 0, 0, 0.25);
+    background-color: #cbfeff; /* Asegura un fondo blanco para el área del chat */
+}
+
+/* ... tu CSS para #form, #input, #messages, etc. ... */
+
+#qr {
+    position: absolute; /* Posicionamiento absoluto dentro de #chat */
+    bottom: 60px; /* Separado del fondo para no superponerse con el formulario */
+    right: 15px; /* Separado del borde derecho */
+    z-index: 10; /* Asegura que esté por encima de otros elementos si hay superposición */
+    display: flex; /* Para alinear el botón y el QR */
+    flex-direction: column; /* Para que el QR y el texto aparezcan debajo del botón */
+    align-items: flex-end; /* Alinea los elementos a la derecha */
+     
+}
+
+#show-qr-btn {
+    background: #524e9e;
+    border: none;
+    border-radius: 50%; /* Hace el botón redondo */
+    width: 90px;
+    height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem; /* Tamaño del icono */
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    color: white; /* Color del icono */
+    margin-bottom: 5px; /* Espacio entre el botón y el contenedor QR */
+    transition: background-color 0.3s ease;
+}
+
+#show-qr-btn:hover {
+    background-color: #443eb4;
+}
+
+#qr-container {
+    background-color: white; /* Fondo blanco para el QR */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    /* display:none; lo mantendrás en el HTML para JavaScript */
+    text-align: center;
+}
+
+/* Ajusta el padding de #messages para que el QR no lo tape cuando esté oculto */
 #messages {
     list-style: none;
     margin: 0;
-    padding: 0;   
+    padding: 0; 
+    height: calc(100% - 50px - 34px); 
+    overflow-y: auto;
+    padding-top: 5px; 
+    padding-bottom: 5px; 
+    /* Agregamos padding-right para que el texto de los mensajes no quede debajo del QR */
+    padding-right: 60px; /* Ajusta según el tamaño de tu botón QR + espacio */
 }
 
 #messages > li {

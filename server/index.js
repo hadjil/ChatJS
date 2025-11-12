@@ -19,17 +19,22 @@ const io = new Server(server,{
 //Metodo Para conseguir la Ip real
 function getLocalIp() {
     const interfaces = os.networkInterfaces();
-    let localIp = 'localhost';
+    const candidates = [];
+
     for (const name in interfaces) {
         for (const net of interfaces[name]) {
             // Filtramos por IPv4 y excluimos la dirección interna (127.0.0.1)
             if (net.family === 'IPv4' && !net.internal) {
-                localIp = net.address;
-                return localIp;
+                // Damos prioridad a las IPs de redes locales comunes (LAN)
+                if (net.address.startsWith('192.168.') || net.address.startsWith('10.') || net.address.startsWith('172.16.')) {
+                    return net.address; // Si encontramos una, es la mejor candidata.
+                }
+                candidates.push(net.address);
             }
         }
     }
-    return localIp;
+    // Si no encontramos una IP de LAN preferida, devolvemos la primera que encontramos, o 'localhost'
+    return candidates.length > 0 ? candidates[0] : 'localhost';
 }
 
 // 2. Iniciar el servidor
@@ -50,12 +55,11 @@ io.on('connection',(socket)=>{
 })
 
 socket.on('chat message', (msg) => {
-  console.log('Mensajito recibido: ', msg);
- } )
-
- socket.on('chat message', (msg) => {
+  // 1. Muestra el mensaje en la consola del servidor
+  console.log('Mensaje recibido:', msg);
+  // 2. Reenvía el mensaje a todos los clientes conectados
   io.emit('chat message', msg);
- })
+ });
 
  socket.emit('server_info', { ip: ipAddress, port: port });
 
