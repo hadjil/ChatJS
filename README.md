@@ -4,6 +4,8 @@ Añadiendo ideas Propias para facilitar la comunicación entre dispositivos
 en una red local
 
 npm install express
+
 npm install socket.io
+
 npm install qrcode
 
