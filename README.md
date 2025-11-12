@@ -1,5 +1,9 @@
 # ChatJS
-Proyecto chat en tiempo real, utilizando Websockets siguiendo la clase de Midudev
+Proyecto chat con sockets.io, partiendo de base de la clase de Midudev
+Añadiendo ideas Propias para facilitar la comunicación entre dispositivos
+en una red local
 
 npm install express
 npm install socket.io
+npm install qrcode
+
